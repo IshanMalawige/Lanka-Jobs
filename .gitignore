@@ -1,0 +1,12 @@
+node_modules/
+dist/
+__pycache__/
+.venv/
+.env
+*.db
+*.log
+credentials.json
+token.json
+/backend/data/cv_profile.json
+/tmp/pdfs/
+.vercel/

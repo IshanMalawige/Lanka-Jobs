@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: lankajobs-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lankajobs-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: ENABLE_SCHEDULER
+        value: "true"
+
+databases:
+  - name: lankajobs-db
+    databaseName: lankajobs
+    user: lankajobs
+    plan: free

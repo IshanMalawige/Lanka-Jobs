@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-ink font-sans antialiased;
+  background-color: #f5f8f5;
+  background-image:
+    radial-gradient(ellipse at 6% 0%, rgba(14, 138, 125, 0.1), transparent 36rem),
+    radial-gradient(ellipse at 96% 8%, rgba(99, 102, 241, 0.075), transparent 32rem),
+    radial-gradient(ellipse at 54% 100%, rgba(230, 190, 145, 0.055), transparent 40rem);
+  background-attachment: fixed;
+}
+:focus-visible { outline: 2px solid #0e8a7d; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
