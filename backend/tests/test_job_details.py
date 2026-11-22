@@ -3,9 +3,16 @@ import unittest
 from unittest.mock import patch
 
 from app.services.job_details import parse_job_details
+from app.config import Settings
 
 
 class PosterImageExtractionTests(unittest.TestCase):
+    def test_memory_sensitive_features_are_disabled_by_default(self):
+        settings = Settings(_env_file=None)
+
+        self.assertFalse(settings.enable_ocr)
+        self.assertEqual(settings.scrape_interval_minutes, 360)
+
     def test_extracts_image_from_structured_job_description(self):
         posting = {
             "@type": "JobPosting",
