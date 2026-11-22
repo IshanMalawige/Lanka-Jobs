@@ -14,6 +14,7 @@ from urllib.parse import urljoin, urlsplit
 import requests
 from bs4 import BeautifulSoup
 
+from ..config import settings
 from ..scrapers.base import HEADERS
 
 if TYPE_CHECKING:
@@ -421,7 +422,9 @@ def _topjobs_details(soup: BeautifulSoup, url: str, posting: dict) -> dict[str, 
     email_source = f"{remark_markup}\n{description}\n{posting.get('email', '')}\n{mailto_emails}"
     email = _EMAIL_PATTERN.search(email_source)
     ocr_text = ""
-    if image and (not description or _is_topjobs_placeholder(description) or not email):
+    if settings.enable_ocr and image and (
+        not description or _is_topjobs_placeholder(description) or not email
+    ):
         ocr_text = _ocr_topjobs_poster(image)
         if ocr_text and (not description or _is_topjobs_placeholder(description)):
             description = ocr_text

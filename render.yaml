@@ -20,6 +20,10 @@ services:
         sync: false
       - key: ENABLE_SCHEDULER
         value: "true"
+      - key: SCRAPE_INTERVAL_MINUTES
+        value: "360"
+      - key: ENABLE_OCR
+        value: "false"
 
 databases:
   - name: lankajobs-db

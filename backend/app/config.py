@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     scrape_interval_minutes: int = 180
     gmail_sync_interval_minutes: int = 15
     enable_scheduler: bool = True
+    enable_ocr: bool = True
     my_skills: str = ""
     telegram_bot_token: SecretStr = SecretStr("")
     telegram_chat_id: str = ""

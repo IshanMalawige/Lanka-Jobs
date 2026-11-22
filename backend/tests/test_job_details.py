@@ -103,7 +103,10 @@ class PosterImageExtractionTests(unittest.TestCase):
         <div class="bottom-panel">Apply by online CV</div>
         """
 
-        with patch("app.services.job_details._ocr_topjobs_poster", return_value=poster_text) as read_poster:
+        with (
+            patch("app.services.job_details.settings.enable_ocr", True),
+            patch("app.services.job_details._ocr_topjobs_poster", return_value=poster_text) as read_poster,
+        ):
             details = parse_job_details(
                 html,
                 "https://www.topjobs.lk/employer/JobAdvertismentServlet?jc=123",
@@ -113,6 +116,33 @@ class PosterImageExtractionTests(unittest.TestCase):
         self.assertIn("Support UK clients", details["description"])
         self.assertNotIn("Please refer the full details", details["description"])
         self.assertEqual(details["how_to_apply"], "Send your CV to: aimposjobs@gmail.com")
+
+    def test_skips_topjobs_poster_ocr_when_disabled(self):
+        html = """
+        <script type="application/ld+json">
+          {"@type":"JobPosting","description":"Please refer the full details of the job posting as given by the employer."}
+        </script>
+        <div id="remark"><img src="/images/role-poster.png"></div>
+        """
+
+        with (
+            patch("app.services.job_details.settings.enable_ocr", False),
+            patch("app.services.job_details._ocr_topjobs_poster") as read_poster,
+        ):
+            details = parse_job_details(
+                html,
+                "https://www.topjobs.lk/employer/JobAdvertismentServlet?jc=123",
+            )
+
+        read_poster.assert_not_called()
+        self.assertEqual(
+            details["description"],
+            "The employer did not provide a detailed description on TopJobs.",
+        )
+        self.assertEqual(
+            details["poster_image_url"],
+            "https://www.topjobs.lk/images/role-poster.png",
+        )
 
     def test_topjobs_without_ad_description_uses_listing_facts_not_site_logo(self):
         posting = {
